@@ -5,6 +5,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session'); // Asegúrate de tenerlo instalado
+const flash = require('connect-flash');
 var hbs = require('hbs');
 
 require('dotenv').config();
@@ -53,11 +54,13 @@ hbs.registerHelper('eachPartidosByGroup', function(arr, groupSize, options) {
 
 // Configuración de la sesión
 app.use(session({
-  secret: 'tu-clave-secreta-aqui',
+  secret: '12w45qe1qe4q1eq54eq5',
   resave: false,
   saveUninitialized: true
 }));
 
+
+app.use(flash());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

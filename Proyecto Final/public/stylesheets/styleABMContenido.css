@@ -77,3 +77,9 @@ color: red;
     color: red !important; /* Letras rojas */
     font-weight: bold; /* Texto en negrita */
 }
+
+.alerta-amarilla {
+    color: yellow; /* Código de color para el amarillo de Bootstrap */
+    background-color: red; /* Fondo rojo */
+}
+

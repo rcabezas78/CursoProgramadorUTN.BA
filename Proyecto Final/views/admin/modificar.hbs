@@ -1,25 +1,37 @@
-<div class="contanier" style="margin:50px auto">
+<div class="container-fluid">
     <div class="row">
         <div class="col-6 offset-3">
-            <h4>Modificar Contenido {{galeria.id}} </h4>
-            <form method="post" action="/admin/ABMContenido/modificar">
-                <input type="hidden" value="{{galeria.id}}" name="id">
-                <div class="form-group">
-                    <input type="text" placeholder="Evento" value="{{novedad.evento}}" class="form-control"
-                        name="evento">
-                </div>
-                <div class="form-group">
-                    <textarea placeholder="Categorías" class="form-control"
-                        name="categorias">{{novedad.categorias}}</textarea>
-                </div>
-                <div class="form-group">
-                    <textarea placeholder="Descripción" class="form-control" name="descripcion">{{novedad.descripcion}}</textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Modificar</button>
-            </form>
-            {{#if error}}
-            <p>{{message}}</p>
-            {{/if}}
+            <div class="card p-4 mx-auto form-red-bg" style="max-width: 600px;">
+                <h2 class="text-center resaltado-amarillo">Modificar Contenido</h2>
+
+                <form method="post" action="/admin/ABMContenido/modificar">
+                    <input type="hidden" value="{{contenido.id}}" name="id">
+                    
+                    <div class="mb-3">
+                        <label for="evento" class="form-label resaltado-amarillo">Evento</label>
+                        <input type="text" class="form-control" id="evento" name="evento" value="{{contenido.evento}}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="categorias" class="form-label resaltado-amarillo">Categorías</label>
+                        <input type="text" class="form-control" id="categorias" name="categorias" value="{{contenido.categorias}}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label resaltado-amarillo">Descripcion</label>
+                        <input type="text" class="form-control" id="descripcion" name="descripcion" value="{{contenido.descripcion}}" required>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-murialdo">Modificar</button>
+                    </div>
+                </form>
+
+                {{#if error}}
+                <p class="text-warning mt-2">{{message}}</p>
+                {{/if}}
+
+            </div>
         </div>
     </div>
 </div>

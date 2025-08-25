@@ -1,59 +1,59 @@
-<main>
-    <div class="container my-5">
-        <h2 class="text-center mb-4">Panel de Administración</h2>
-        <p>Aquí podrás gestionar tu contenido.</p>
-        <div class="card p-3 shadow-sm">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="mb-0">Listado de Contenido</h4>
-                <a href="/admin/ABMContenido" class="btn btn-danger">+ Nuevo</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Miniatura</th>
-                            <th>Nombre Archivo</th>
-                            <th>Evento</th>
-                            <th>Categorías</th>
-                            <th>Descripción</th>
-                            <th>Fecha subida</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each contenido}}
+    <main>
+        <div class="container my-5">
+            <h2 class="text-center mb-4">Panel de Administración</h2>
+            <p>Aquí podrás gestionar tu contenido.</p>
+            <div class="card p-3 shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">Listado de Contenido</h4>
+                    <a href="/admin/ABMContenido" class="btn btn-danger">+ Nuevo</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td>{{this.id}}</td>
-                                <td>
-                                    {{#if this.nombreArchivo}}
-                                        <img src="/images/uploads/{{this.nombreArchivo}}" style="width: 50px; height: 50px; object-fit: cover;">
-                                    {{/if}}
-                                </td>
-                                <td>{{this.nombreArchivo}}</td>
-                                <td>{{this.evento}}</td>
-                                <td>{{this.categorias}}</td>
-                                <td>{{this.descripcion}}</td>
-                                <td>{{this.fechaSubida}}</td>
-                               <td class="acciones">
-    <div class="d-flex gap-2">
-        <a href="/admin/ABMContenido/modificar/{{this.id}}" class="btn btn-sm btn-info text-white">
-            <i class="fas fa-pencil-alt"></i>
-        </a>
-        <a href="/admin/ABMContenido/eliminar/{{this.id}}" class="btn btn-sm btn-danger">
-            <i class="fas fa-trash-alt"></i>
-        </a>
-    </div>
-</td>
+                                <th>#</th>
+                                <th>Miniatura</th>
+                                <th>Nombre Archivo</th>
+                                <th>Evento</th>
+                                <th>Categorías</th>
+                                <th>Descripción</th>
+                                <th>Fecha subida</th>
+                                <th>Acciones</th>
                             </tr>
-                        {{else}}
-                            <tr>
-                                <td colspan="8">No hay contenido para mostrar.</td>
-                            </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {{#each contenido}}
+                                <tr>
+                                    <td>{{this.id}}</td>
+                                    <td>
+                                        {{#if this.nombreArchivo}}
+                                            <img src="/images/uploads/{{this.nombreArchivo}}" style="width: 50px; height: 50px; object-fit: cover;">
+                                        {{/if}}
+                                    </td>
+                                    <td>{{this.nombreArchivo}}</td>
+                                    <td>{{this.evento}}</td>
+                                    <td>{{this.categorias}}</td>
+                                    <td>{{this.descripcion}}</td>
+                                    <td>{{this.fechaSubida}}</td>
+                                <td class="acciones">
+        <div class="d-flex gap-2">
+            <a href="/admin/ABMContenido/modificar/{{this.id}}" class="btn btn-sm btn-info text-white">
+                <i class="fas fa-pencil-alt"></i>
+            </a>
+            <a href="/admin/ABMContenido/eliminar/{{this.id}}" class="btn btn-sm btn-danger">
+                <i class="fas fa-trash-alt"></i>
+            </a>
+        </div>
+    </td>
+                                </tr>
+                            {{else}}
+                                <tr>
+                                    <td colspan="8">No hay contenido para mostrar.</td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
