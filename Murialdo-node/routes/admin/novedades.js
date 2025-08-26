@@ -1,10 +1,21 @@
 var express = require('express');
 var router = express.Router();
-
 var novedadesModel = require('../../models/novedadesModel');
-var util =require('util');
-// var cloudinary=require('cloudinary').v2;
-// const uploader=util.promisify(cloudinary.uploader.upload);
+var util = require('util');
+var multer = require('multer');
+//const upload = require('../admin/multer'); // Importa la configuración de multer
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/images/uploads');
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage: storage });
+
 
 
 /* Diseño de la vista de novedades */
@@ -18,7 +29,6 @@ router.get('/', async function (req, res, next) {
         });
     } catch (error) {
         console.log(error);
-        // Maneja el error, por ejemplo, mostrando una página de error
         res.render('admin/novedades', {
             layout: 'admin/layout',
             usuario: req.session.nombre,
@@ -36,31 +46,26 @@ router.get('/agregar', (req, res, next) => {
 });
 
 /* Envía los datos de la novedad */
-router.post('/agregar', async (req, res, next) => {
+router.post('/agregar', upload.single('imagen'), async (req, res, next) => {
     try {
-        var img_id = '';
-        if (req.files && Object.keys(req.files).length > 0) {
-            imagen = req.files.imagen;
-            img_id = (await uploader(imagen.tempFilePath)).public_id;
-        }
+        const imgId = req.file.filename;
 
-        // Se valida que los campos no estén vacíos
-        if (req.body.titulo === "" || req.body.subtitulo === "" || req.body.cuerpo === "") {
-            // Si falta un campo, se lanza un error que será capturado por el 'catch'
-            throw new Error('Todos los campos son requeridos');
-        }
+        // Añade esta línea para ver lo que se está recibiendo
+        console.log('Datos recibidos del formulario:', req.body);
 
-        // Se inserta la novedad solo si la validación es exitosa
-        await novedadesModel.insertNovedad({ ...req.body, img_id });
-        res.redirect('/admin/novedades');
-
+        await novedadesModel.insertNovedad({
+            titulo: req.body.titulo,
+            subtitulo: req.body.subtitulo,
+            cuerpo: req.body.cuerpo,
+            img_id: imgId
+        });
+        
+        res.redirect('/admin/novedades'); 
     } catch (error) {
-        console.log(error);
+        console.error('Error al guardar la novedad:', error);
         res.render('admin/agregar', {
             layout: 'admin/layout',
-            error: true,
-            // Muestra un mensaje específico si el error es de validación
-            message: error.message === 'Todos los campos son requeridos' ? error.message : 'No se cargó la novedad'
+            message: 'No se pudo guardar la novedad. Asegúrate de que todos los campos estén llenos.'
         });
     }
 });
@@ -69,7 +74,6 @@ router.post('/agregar', async (req, res, next) => {
 router.get('/modificar/:id', async (req, res, next) => {
     try {
         var id = req.params.id;
-        // La línea corregida: se reemplaza el guion por un punto
         var novedad = await novedadesModel.getNovedadById(id);
         
         res.render('admin/modificar', {
@@ -87,17 +91,34 @@ router.get('/modificar/:id', async (req, res, next) => {
 });
 
 /* Ruta POST para modificar la novedad */
-router.post('/modificar', async (req, res, next) => {
+router.post('/modificar', upload.single('imagen'), async (req, res, next) => {
     try {
         let obj = req.body;
         
-        // La consulta a la base de datos para la actualización
-        await novedadesModel.modificarNovedadById(obj, obj.id);
+        // Verifica si se subió una nueva imagen.
+        if (req.file) {
+            // Si hay un archivo, Multer ya ha procesado los datos.
+            // Sube la imagen y actualiza el campo 'img_id' en el objeto.
+            obj.img_id = req.file.filename;
+        } else {
+            // Si no se subió una nueva imagen, conserva la original.
+            // Asegúrate de que el campo oculto 'img_original' esté en el formulario.
+            obj.img_id = req.body.img_original;
+        }
 
+        // Obtiene el ID de la novedad desde el campo oculto del formulario.
+        const id = obj.id;
+        delete obj.id; // Elimina el ID del objeto para que no se intente actualizar en la BD.
+
+        console.log('Objeto de datos a actualizar:', obj);
+        console.log('ID a actualizar:', id);
+
+        await novedadesModel.modificarNovedadById(obj, id);
+        
         res.redirect('/admin/novedades');
 
     } catch (error) {
-        console.log(error);
+        console.error('Error al modificar la novedad:', error);
         res.render('admin/modificar', {
             layout: 'admin/layout',
             error: true,

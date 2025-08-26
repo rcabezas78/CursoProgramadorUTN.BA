@@ -47,7 +47,9 @@ async function getNovedadById(id) {
 // Función para modificar una novedad por su ID
 async function modificarNovedadById(obj, id) {
     try {
-        var query = 'update novedades set ? where id=?';
+        console.log('Objeto recibido en el modelo:', obj);
+        console.log('ID recibido en el modelo:', id);
+        var query = 'UPDATE novedades SET ? WHERE id = ?';
         var rows = await pool.query(query, [obj, id]);
         return rows;
     } catch (error) {

@@ -2,19 +2,40 @@
     <div class="row">
         <div class="col-6 offset-3">
             <h4>Modificar la novedad</h4>
-            <form method="post" action="/admin/novedades/modificar" method="post" enctype="multipart/form-data"">
+            {{!-- Se envía la información a la ruta POST de modificar --}}
+            <form action="/admin/novedades/modificar" method="post" enctype="multipart/form-data">
+                {{!-- Campo oculto para pasar el ID de la novedad --}}
                 <input type="hidden" value="{{novedad.id}}" name="id">
+
                 <div class="form-group">
+                    <label for="titulo">Título</label>
                     <input type="text" placeholder="Titulo" value="{{novedad.titulo}}" class="form-control"
                         name="titulo">
                 </div>
                 <div class="form-group">
+                    <label for="subtitulo">Subtítulo</label>
                     <textarea placeholder="Subtitulo" class="form-control"
                         name="subtitulo">{{novedad.subtitulo}}</textarea>
                 </div>
                 <div class="form-group">
+                    <label for="cuerpo">Cuerpo</label>
                     <textarea placeholder="Cuerpo" class="form-control" name="cuerpo">{{novedad.cuerpo}}</textarea>
                 </div>
+                
+                <div class="mb-3">
+                            <label class="form-label">Subir Archivo (Fotos o Videos)</label>
+                            <div class="input-group">
+                                <label class="btn btn-rojo-amarillo">Examinar...
+                                    <input type="file" class="form-control d-none" id="imagen-upload" name="imagen" accept="image/*,video/*">
+                                </label>
+                                <span class="form-control" id="file-name" style="background-color: white;">No se seleccionó un archivo.</span>
+                            </div>
+
+                            {{#if contenido.nombreArchivo}}
+                            <p style="color: yellow;">Archivo actual: <strong>{{contenido.nombreArchivo}}</strong></p>
+                            {{/if}}
+                        </div>
+
                 <button type="submit" class="btn btn-primary">Modificar</button>
             </form>
         </div>
