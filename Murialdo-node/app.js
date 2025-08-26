@@ -6,16 +6,11 @@ var logger = require('morgan');
 
 require('dotenv').config();
 var session = require('express-session');
-//var fileUpload=require('express-fileupload');
 
 var indexRouter = require('./routes/admin/index');
 var usersRouter = require('./routes/users');
-
-//Manejador de rutas
-var loginRouter = require('./routes/admin/login');  
-var adminRouter= require('./routes/admin/novedades');
-const { secureHeapUsed } = require('crypto');
-// Fin Manejador de rutas
+var loginRouter = require('./routes/admin/login');
+var adminRouter = require('./routes/admin/novedades');
 
 var app = express();
 
@@ -30,56 +25,43 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
-  secret: '12w45qe1qe4q1eq54eq5',
-  resave: false,
-  saveUninitialized: true
-}))
+  secret: '12w45qe1qe4q1eq54eq5',
+  resave: false,
+  saveUninitialized: true
+}));
 
-secured = async (req, res, next)=> {
-  try{
-    //console.log(req.session.id_usuario);
-    if(req.session.id_usuario){
-    next();      
-    }else{
-      res.redirect('/admin/login')
-    }        
-}   catch (error){
-  console.log(error);
-  }
-}
+// Middleware de seguridad para proteger las rutas del panel de control
+var secured = async (req, res, next) => {
+  try {
+    if (req.session.id_usuario) {
+      next();
+    } else {
+      res.redirect('/admin/login');
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-// app.use(fileUpload({
-//   useTempFiles: true,
-//   tempFileDir: '/tmp/'
-// }));
-
-
-//app.use('/', indexRouter);
-app.use('/users', usersRouter);
-
-//rutas que agrego- Se una cuando aparezca en la ruta del navegador /admin/login
+// Rutas públicas
 app.use('/admin/login', loginRouter);
-app.use('/admin/novedades',secured, adminRouter); 
-app.use('/admin/index', indexRouter); 
+app.use('/users', usersRouter); 
 
-//app.use('/admin/novedades', adminRouter); 
-
-
+// Rutas protegidas por el middleware de seguridad
+app.use('/admin/novedades', secured, adminRouter);
+app.use('/admin/index', secured, indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+  next(createError(404));
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.status(err.status || 500);
+  res.render('error');
 });
 
 module.exports = app;

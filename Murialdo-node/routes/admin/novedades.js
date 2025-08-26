@@ -3,7 +3,8 @@ var router = express.Router();
 var novedadesModel = require('../../models/novedadesModel');
 var util = require('util');
 var multer = require('multer');
-//const upload = require('../admin/multer'); // Importa la configuración de multer
+//var upload = require('./multer'); // Importa la configuración de multer
+const upload = require('../admin/multer'); // Importa la configuración de multer
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -14,7 +15,7 @@ const storage = multer.diskStorage({
         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
     }
 });
-const upload = multer({ storage: storage });
+//const upload = multer({ storage: storage });
 
 
 
@@ -91,18 +92,16 @@ router.get('/modificar/:id', async (req, res, next) => {
 });
 
 /* Ruta POST para modificar la novedad */
+/* Ruta POST para modificar la novedad */
 router.post('/modificar', upload.single('imagen'), async (req, res, next) => {
     try {
         let obj = req.body;
         
         // Verifica si se subió una nueva imagen.
         if (req.file) {
-            // Si hay un archivo, Multer ya ha procesado los datos.
-            // Sube la imagen y actualiza el campo 'img_id' en el objeto.
             obj.img_id = req.file.filename;
         } else {
             // Si no se subió una nueva imagen, conserva la original.
-            // Asegúrate de que el campo oculto 'img_original' esté en el formulario.
             obj.img_id = req.body.img_original;
         }
 
