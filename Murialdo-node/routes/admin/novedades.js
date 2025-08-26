@@ -38,30 +38,29 @@ router.get('/agregar', (req, res, next) => {
 /* Envía los datos de la novedad */
 router.post('/agregar', async (req, res, next) => {
     try {
-
-        var img_id='';
-        if(req.files && Object.keys(req.files).length>0){
-            imagen=req.files.imagen;
-            img_id=(await uploader(imagen.tempFilePath)).public_id;            
+        var img_id = '';
+        if (req.files && Object.keys(req.files).length > 0) {
+            imagen = req.files.imagen;
+            img_id = (await uploader(imagen.tempFilePath)).public_id;
         }
 
-
-        if (req.body.titulo != "" && req.body.subtitulo != "" && req.body.cuerpo != "") {
-            await novedadesModel.insertNovedad(req.body);
-            res.redirect('/admin/novedades');
-        } else {
-            res.render('admin/agregar', {
-                layout: 'admin/layout',
-                error: true,
-                message: 'Todos los campos son requeridos'
-            });
+        // Se valida que los campos no estén vacíos
+        if (req.body.titulo === "" || req.body.subtitulo === "" || req.body.cuerpo === "") {
+            // Si falta un campo, se lanza un error que será capturado por el 'catch'
+            throw new Error('Todos los campos son requeridos');
         }
+
+        // Se inserta la novedad solo si la validación es exitosa
+        await novedadesModel.insertNovedad({ ...req.body, img_id });
+        res.redirect('/admin/novedades');
+
     } catch (error) {
         console.log(error);
         res.render('admin/agregar', {
             layout: 'admin/layout',
             error: true,
-            message: 'No se cargó la novedad'
+            // Muestra un mensaje específico si el error es de validación
+            message: error.message === 'Todos los campos son requeridos' ? error.message : 'No se cargó la novedad'
         });
     }
 });
