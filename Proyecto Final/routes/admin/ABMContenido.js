@@ -58,7 +58,7 @@ router.get('/', async function (req, res, next) {
 
 // ✅ Ruta GET para el formulario de agregar
 router.get('/agregar', (req, res, next) => {
-    res.render('admin/agregar', {
+    res.render('admin/ABMContenido', {
         layout: 'admin/layout'
     });
 });
@@ -68,7 +68,7 @@ router.get('/agregar', (req, res, next) => {
 router.post('/agregar', upload.single('imagen'), async (req, res, next) => {
     try {
         if (!req.body.evento || !req.body.descripcion || !req.body.categorias) {
-            res.render('admin/agregar', {
+            res.render('admin/ABMContenido', {
                 layout: 'admin/layout',
                 error: true,
                 message: 'Todos los campos son requeridos'
@@ -114,7 +114,7 @@ router.get('/eliminar/:id', async function (req, res, next) {
         console.error(error);
         //Usa flash para el error también
         req.flash('error_msg', 'No se pudo eliminar el registro.');
-        res.redirect('/admin/ontenido');
+        res.redirect('/admin/Contenido');
     }
 });
 

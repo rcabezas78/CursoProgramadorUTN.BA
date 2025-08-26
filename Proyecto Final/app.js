@@ -92,4 +92,26 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+// Ejemplo de configuración de Handlebars con Express
+//const hbs = require('hbs');
+//sconst path = require('path');
+
+// Registrar el helper
+hbs.registerHelper('formatDate', (date) => {
+  if (date) {
+    const d = new Date(date);
+    // Obtener día, mes y año y formatearlos
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+  return '';
+});
+
+// Configurar el motor de vistas de Express
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
+
+
 module.exports = app;
