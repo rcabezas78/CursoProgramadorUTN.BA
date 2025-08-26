@@ -69,12 +69,6 @@ h2 {
 }
 
 
-
-
-
-
-
-
 /* Style for the 3-column gallery */
 .galeria-row {
     display: flex;
@@ -114,8 +108,6 @@ h2 {
     margin-bottom: 20px;
 }
 
-
-
 /* Para centrar el contenedor de botones si no lo estuviera */
 .text-center {
     text-align: center;
@@ -137,4 +129,9 @@ h2 {
     background-color: red; /* o el color que desees */
     color: white; /* para que el texto sea visible */
     border-color: red;
+}
+
+.admin-text {
+    color: yellow;
+    font-size: 1.2rem;
 }

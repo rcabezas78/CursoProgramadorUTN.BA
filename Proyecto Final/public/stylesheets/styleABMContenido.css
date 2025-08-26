@@ -83,3 +83,7 @@ color: red;
     background-color: red; /* Fondo rojo */
 }
 
+.admin-text {
+    color: yellow;
+    font-size: 1.2rem;
+}
