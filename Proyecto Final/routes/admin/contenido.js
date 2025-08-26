@@ -73,7 +73,9 @@ router.post('/modificar', async (req, res, next) => {
         let obj = {
             evento: req.body.evento,
             categoria: req.body.categoria,
-            descripcion: req.body.descripcion
+            descripcion: req.body.descripcion,
+            nombreArchivo: req.body.nombreArchivo
+
         };
         await contenidoModel.modificarContenidoById(obj, req.body.id);
         res.redirect('/admin/contenido');

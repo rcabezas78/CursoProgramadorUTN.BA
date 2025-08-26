@@ -109,12 +109,12 @@ router.get('/eliminar/:id', async function (req, res, next) {
 
         // Usa flash y redirige a la URL limpia
         req.flash('success_msg', '¡El registro se ha eliminado exitosamente!');
-        res.redirect('/admin/ABMContenido');
+        res.redirect('/admin/Contenido');
     } catch (error) {
         console.error(error);
         //Usa flash para el error también
         req.flash('error_msg', 'No se pudo eliminar el registro.');
-        res.redirect('/admin/ABMContenido');
+        res.redirect('/admin/ontenido');
     }
 });
 
@@ -134,22 +134,40 @@ router.get('/modificar/:id', async (req, res, next) => {
     }
 });
 
-
-// ✅ Ruta POST para procesar la modificación (recibir los datos del formulario)
-router.post('/modificar', async (req, res, next) => {
+router.post('/modificar', upload.single('imagen'), async (req, res, next) => {
     try {
+        let nombreArchivo = req.body.nombreArchivo_existente; 
+
+        if (req.file) {
+            nombreArchivo = req.file.filename;
+
+            if (req.body.nombreArchivo_existente) {
+                const fs = require('fs');
+                const path = require('path');
+                const oldImagePath = path.join(__dirname, '..', '..', 'public', 'images', 'uploads', req.body.nombreArchivo_existente);
+                
+                if (fs.existsSync(oldImagePath)) {
+                    fs.unlinkSync(oldImagePath);
+                }
+            }
+        }
+
         let obj = {
             evento: req.body.evento,
             descripcion: req.body.descripcion,
-            categorias: req.body.categorias
+            categorias: req.body.categorias,
+            nombreArchivo: nombreArchivo 
         };
+
         await contenidoModel.modificarContenidoById(obj, req.body.id);
-        // ✅ Redirige al listado con un parámetro de éxito
-        res.redirect('/admin/ABMContenido?modified=true');
+
+        // ✅ LÍNEA CORREGIDA: Envia una respuesta JSON en lugar de redirigir
+        res.json({ success: true, message: '¡El contenido se ha modificado exitosamente!' });
+
     } catch (error) {
         console.log(error);
-        res.redirect('/admin/ABMContenido?error=true&message=No se pudo modificar el contenido');
+        // En caso de error, también envía una respuesta JSON
+        res.status(500).json({ success: false, message: 'No se pudo modificar el contenido.' });
     }
 });
-
 module.exports = router;

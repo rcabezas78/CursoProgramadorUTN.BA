@@ -1,0 +1,67 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* color: #333; */
+    background-color: #FFFF00; /* Amarillo brillante y puro */
+    padding-top: 116px;
+    /* Para que el contenido no quede detrás del navbar fijo */
+}
+
+/* Estilo para el fondo del formulario */
+.form-red-bg {
+    background-color: red;
+    padding: 20px;
+}
+
+/* Estilo para el botón de guardar */
+.btn.btn-murialdo {
+    background-color: yellow !important;
+    color: red !important;
+    font-weight: bold;
+    font-size: 1.4rem !important;
+    border-radius: 50px !important;
+    border: none !important;
+    padding: 10px 20px !important;
+}
+
+/* Nuevas reglas para los campos y etiquetas */
+.form-red-bg label {
+    color: yellow; /* Hace los títulos de los campos amarillos */
+}
+
+.form-red-bg .form-control {
+    background-color: yellow; /* Hace el fondo de los campos de entrada amarillo */
+}
+
+/* Estilo para el título resaltado en amarillo */
+.resaltado-amarillo {
+    color: yellow !important;
+    font-weight: bold;
+}
+
+/* ✅ Estilos para el botón de 'Examinar...' personalizado */
+.btn-rojo-amarillo {
+    background-color: yellow; /* Fondo del botón amarillo */
+    color: red !important; /* Letras rojas */
+    font-weight: bold;
+    /* Estilos del botón */
+    border: 1px solid #dc3545;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+}
+
+/* ✅ Nuevos estilos para el campo de archivo seleccionado */
+#file-name {
+    /*background-color:yellow !important;*/ /* Fondo del campo de texto amarillo */
+    background-color: white !important;
+    color: red !important; /* Letras rojas */
+    font-weight: bold; /* Texto en negrita */
+}
+
+.admin-text {
+    color: yellow;
+    font-size: 1.2rem; /* Tamaño de letra más pequeño */
+ }
