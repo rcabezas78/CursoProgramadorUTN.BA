@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 require('dotenv').config();
 var session = require('express-session');
+<<<<<<< HEAD
 var fileUpload = require('express-fileupload');
 
 var indexRouter = require('./routes/admin/index');
@@ -15,6 +16,13 @@ var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/admin/login');
 var adminRouter = require('./routes/admin/novedades');
 // Fin Manejador de rutas
+=======
+
+var indexRouter = require('./routes/admin/index');
+var usersRouter = require('./routes/users');
+var loginRouter = require('./routes/admin/login');
+var adminRouter = require('./routes/admin/novedades');
+>>>>>>> 27efbc884c03031fec532318d58abab217c07085
 
 var app = express();
 
@@ -29,6 +37,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
+<<<<<<< HEAD
     secret: '12w45qe1qe4q1eq54eq5',
     resave: false,
     saveUninitialized: true
@@ -77,6 +86,45 @@ app.use(function (err, req, res, next) {
     // render the error page
     res.status(err.status || 500);
     res.render('error');
+=======
+  secret: '12w45qe1qe4q1eq54eq5',
+  resave: false,
+  saveUninitialized: true
+}));
+
+// Middleware de seguridad para proteger las rutas del panel de control
+var secured = async (req, res, next) => {
+  try {
+    if (req.session.id_usuario) {
+      next();
+    } else {
+      res.redirect('/admin/login');
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Rutas públicas
+app.use('/admin/login', loginRouter);
+app.use('/users', usersRouter); 
+
+// Rutas protegidas por el middleware de seguridad
+app.use('/admin/novedades', secured, adminRouter);
+app.use('/admin/index', secured, indexRouter);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.status(err.status || 500);
+  res.render('error');
+>>>>>>> 27efbc884c03031fec532318d58abab217c07085
 });
 
 module.exports = app;
