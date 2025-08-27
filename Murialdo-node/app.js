@@ -6,15 +6,14 @@ var logger = require('morgan');
 
 require('dotenv').config();
 var session = require('express-session');
-var fileUpload=require('express-fileupload');
+var fileUpload = require('express-fileupload');
 
 var indexRouter = require('./routes/admin/index');
 var usersRouter = require('./routes/users');
 
-//Manejador de rutas
-var loginRouter = require('./routes/admin/login');  
-var adminRouter= require('./routes/admin/novedades');
-const { secureHeapUsed } = require('crypto');
+// Manejador de rutas
+var loginRouter = require('./routes/admin/login');
+var adminRouter = require('./routes/admin/novedades');
 // Fin Manejador de rutas
 
 var app = express();
@@ -30,56 +29,54 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
-  secret: '12w45qe1qe4q1eq54eq5',
-  resave: false,
-  saveUninitialized: true
-}))
+    secret: '12w45qe1qe4q1eq54eq5',
+    resave: false,
+    saveUninitialized: true
+}));
 
-secured = async (req, res, next)=> {
-  try{
-    //console.log(req.session.id_usuario);
-    if(req.session.id_usuario){
-    next();      
-    }else{
-      res.redirect('/admin/login')
-    }        
-}   catch (error){
-  console.log(error);
-  }
+// ✅ Middleware para manejo de subida de archivos
+app.use(fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/'
+}));
+
+// Middleware de seguridad (secured)
+secured = async (req, res, next) => {
+    try {
+        if (req.session.id_usuario) {
+            next();
+        } else {
+            // ✅ Agrega 'return' para detener la ejecución
+            return res.redirect('/admin/login');
+        }
+    } catch (error) {
+        console.log(error);
+        return res.redirect('/admin/login');
+    }
 }
 
-app.use(fileUpload)({
-  useTempFiles: true,
-  tempFileDir: '/tmp/'
-});
-
-
-//app.use('/', indexRouter);
+// app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-//rutas que agrego- Se una cuando aparezca en la ruta del navegador /admin/login
+// Rutas que agrego
 app.use('/admin/login', loginRouter);
-app.use('/admin/novedades',secured, adminRouter); 
-app.use('/admin/index', indexRouter); 
-
-//app.use('/admin/novedades', adminRouter); 
-
-
+app.use('/admin/novedades', secured, adminRouter);
+app.use('/admin/index', secured, indexRouter); // ✅ Agregamos 'secured' a la ruta de índice
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+app.use(function (req, res, next) {
+    next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use(function (err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 module.exports = app;
